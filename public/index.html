@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Quality used and new cars plus genuine spare parts in Nairobi. Buy, sell, and service with Automotive and Transport Solutions.">
+    <title>Automotive and Transport Solutions | Cars &amp; Spare Parts</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <div class="container header-bar">
+            <div class="brand">
+                <span class="brand-mark">ATS</span>
+                <span class="brand-name">Automotive &amp; Transport Solutions</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#vehicles">Vehicles</a></li>
+                    <li><a href="#spares">Spare Parts</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Home Section -->
+    <section id="home" class="hero">
+        <div class="container hero-grid">
+            <div class="hero-copy">
+                <p class="eyebrow">Nairobi &middot; Buy &middot; Sell &middot; Service</p>
+                <h1>Find your next ride.<br>Keep it running.</h1>
+                <p class="hero-lead">We sell inspected, ready-to-drive cars and stock genuine spare parts for the makes Kenyan roads run on &mdash; backed by a team that knows both sides of the bonnet.</p>
+                <div class="hero-actions">
+                    <a href="#vehicles" class="btn btn-primary">Browse Vehicles</a>
+                    <a href="#spares" class="btn btn-outline">Shop Spare Parts</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat"><span class="stat-num">300+</span><span class="stat-label">Cars sold</span></div>
+                    <div class="stat"><span class="stat-num">1,200+</span><span class="stat-label">Parts in stock</span></div>
+                    <div class="stat"><span class="stat-num">7 yrs</span><span class="stat-label">On the road</span></div>
+                </div>
+            </div>
+            <div class="hero-art" aria-hidden="true">
+                <svg viewBox="0 0 420 220" xmlns="http://www.w3.org/2000/svg" class="car-svg">
+                    <line x1="10" y1="190" x2="410" y2="190" stroke="var(--chrome)" stroke-width="2"/>
+                    <path d="M40 150 L70 105 C85 90 110 82 140 82 L250 82 C280 82 300 92 315 108 L360 150 Z" fill="none" stroke="var(--paper)" stroke-width="4" stroke-linejoin="round"/>
+                    <path d="M100 150 L120 110 C128 100 140 96 155 96 L235 96 C248 96 258 101 266 110 L288 150" fill="none" stroke="var(--paper)" stroke-width="3"/>
+                    <line x1="188" y1="96" x2="188" y2="150" stroke="var(--paper)" stroke-width="3"/>
+                    <circle cx="105" cy="150" r="26" fill="var(--asphalt)" stroke="var(--paper)" stroke-width="4"/>
+                    <circle cx="105" cy="150" r="9" fill="none" stroke="var(--safety-orange)" stroke-width="3"/>
+                    <circle cx="305" cy="150" r="26" fill="var(--asphalt)" stroke="var(--paper)" stroke-width="4"/>
+                    <circle cx="305" cy="150" r="9" fill="none" stroke="var(--safety-orange)" stroke-width="3"/>
+                    <rect x="40" y="150" width="320" height="4" fill="var(--paper)"/>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about">
+        <div class="container">
+            <p class="eyebrow">About Us</p>
+            <h2>One yard, two jobs done properly</h2>
+            <p>Automotive and Transport Solutions started as a spares counter and grew into a full car yard because our customers kept asking for both. Every vehicle we sell is inspected before it reaches the yard, and every part we stock is genuine or OEM-equivalent &mdash; no guesswork, no counterfeits. Whether you're buying your first car or just need a radiator before Monday, we treat the sale the same way: straight answers, fair prices, parts that fit.</p>
+        </div>
+    </section>
+
+    <!-- Vehicles for Sale Section -->
+    <section id="vehicles">
+        <div class="container">
+            <p class="eyebrow">For Sale</p>
+            <h2>Vehicles in the Yard</h2>
+            <div class="vehicle-grid" id="vehicle-grid">
+                <!-- Vehicles are rendered here by app.js from saved data -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Spare Parts Section -->
+    <section id="spares" class="spares">
+        <div class="container">
+            <p class="eyebrow">In Stock</p>
+            <h2>Spare Parts Catalog</h2>
+            <p class="section-lead">Genuine and OEM-equivalent parts, sold on their own or fitted while you wait. Prices below are per unit.</p>
+
+            <ul class="parts-list" id="parts-list">
+                <!-- Parts are rendered here by app.js from saved data -->
+            </ul>
+
+            <a href="#contact" class="btn btn-primary">Ask About a Part</a>
+        </div>
+    </section>
+
+    <!-- Contact Us Section -->
+    <section id="contact">
+        <div class="container">
+            <p class="eyebrow">Get In Touch</p>
+            <h2>Buying, selling, or need a part?</h2>
+            <p class="section-lead">Tell us what you're looking for and we'll get back to you with availability and price.</p>
+            <form action="#" method="POST">
+                <label for="name">Your Name</label>
+                <input type="text" id="name" name="name" placeholder="Your Name" required>
+                <label for="email">Your Email</label>
+                <input type="email" id="email" name="email" placeholder="Your Email" required>
+                <label for="message">What do you need?</label>
+                <textarea id="message" name="message" placeholder="e.g. Looking for a used Mazda Demio, or a radiator for a Subaru Forester" required></textarea>
+                <button type="submit">Send Enquiry</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer>
+        <div class="container footer-bar">
+            <p>&copy; 2026 Automotive and Transport Solutions | All Rights Reserved</p>
+            <a href="admin.html" class="admin-link">Admin Login</a>
+        </div>
+    </footer>
+
+</body>
+</html>

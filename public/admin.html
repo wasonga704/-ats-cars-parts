@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Admin | Automotive and Transport Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container header-bar">
+            <div class="brand">
+                <span class="brand-mark">ATS</span>
+                <span class="brand-name">Admin Panel</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">View Site</a></li>
+                    <li><a href="#" id="logout-link" class="hidden">Log Out</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Login Gate -->
+    <section id="login-gate" class="admin-section">
+        <div class="container login-box">
+            <p class="eyebrow">Restricted Area</p>
+            <h2>Admin Login</h2>
+            <p class="section-lead">Enter the admin password to manage vehicles and spare parts. Changes here go live for every visitor.</p>
+            <form id="login-form">
+                <label for="admin-password">Password</label>
+                <input type="password" id="admin-password" name="admin-password" placeholder="Enter password" required autocomplete="current-password">
+                <p id="login-error" class="form-error hidden">Incorrect password. Try again.</p>
+                <button type="submit">Log In</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Dashboard (hidden until logged in) -->
+    <section id="dashboard" class="admin-section hidden">
+        <div class="container">
+            <p class="eyebrow">Dashboard</p>
+            <h2>Manage Listings</h2>
+            <p class="section-lead">Changes you make here are saved to the database and appear immediately for every visitor to the site.</p>
+            <p id="dashboard-error" class="form-error hidden"></p>
+
+            <!-- Vehicles Management -->
+            <div class="admin-panel">
+                <h3>Vehicles</h3>
+                <form id="vehicle-form" class="admin-form">
+                    <div class="form-grid">
+                        <div>
+                            <label for="v-name">Name</label>
+                            <input type="text" id="v-name" placeholder="e.g. Toyota Fielder" required>
+                        </div>
+                        <div>
+                            <label for="v-year">Year</label>
+                            <input type="number" id="v-year" placeholder="2018" required min="1990" max="2030">
+                        </div>
+                        <div>
+                            <label for="v-mileage">Mileage</label>
+                            <input type="text" id="v-mileage" placeholder="e.g. 70,000 km" required>
+                        </div>
+                        <div>
+                            <label for="v-fuel">Fuel</label>
+                            <input type="text" id="v-fuel" placeholder="e.g. Petrol" required>
+                        </div>
+                        <div>
+                            <label for="v-transmission">Transmission</label>
+                            <input type="text" id="v-transmission" placeholder="e.g. Auto" required>
+                        </div>
+                        <div>
+                            <label for="v-price">Price (KSh)</label>
+                            <input type="number" id="v-price" placeholder="1200000" required min="0">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm">Add Vehicle</button>
+                </form>
+
+                <ul class="admin-list" id="admin-vehicle-list">
+                    <!-- Rendered from API -->
+                </ul>
+            </div>
+
+            <!-- Spare Parts Management -->
+            <div class="admin-panel">
+                <h3>Spare Parts</h3>
+                <form id="part-form" class="admin-form">
+                    <div class="form-grid">
+                        <div>
+                            <label for="p-name">Part Name</label>
+                            <input type="text" id="p-name" placeholder="e.g. Brake Pad Set" required>
+                        </div>
+                        <div>
+                            <label for="p-fits">Fits</label>
+                            <input type="text" id="p-fits" placeholder="e.g. Toyota Axio" required>
+                        </div>
+                        <div>
+                            <label for="p-sku">SKU</label>
+                            <input type="text" id="p-sku" placeholder="e.g. BP-1050-A" required>
+                        </div>
+                        <div>
+                            <label for="p-price">Price (KSh)</label>
+                            <input type="number" id="p-price" placeholder="3500" required min="0">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm">Add Part</button>
+                </form>
+
+                <ul class="admin-list" id="admin-part-list">
+                    <!-- Rendered from API -->
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Automotive and Transport Solutions | Admin Panel</p>
+        </div>
+    </footer>
+
+    <script>
+        const TOKEN_KEY = "ats_admin_token";
+        const loginGate = document.getElementById("login-gate");
+        const dashboard = document.getElementById("dashboard");
+        const logoutLink = document.getElementById("logout-link");
+        const loginForm = document.getElementById("login-form");
+        const loginError = document.getElementById("login-error");
+        const dashboardError = document.getElementById("dashboard-error");
+
+        function getToken() {
+            return sessionStorage.getItem(TOKEN_KEY);
+        }
+
+        function showDashboard() {
+            loginGate.classList.add("hidden");
+            dashboard.classList.remove("hidden");
+            logoutLink.classList.remove("hidden");
+            renderAdminVehicles();
+            renderAdminParts();
+        }
+
+        function showLogin() {
+            loginGate.classList.remove("hidden");
+            dashboard.classList.add("hidden");
+            logoutLink.classList.add("hidden");
+        }
+
+        function showDashboardError(msg) {
+            dashboardError.textContent = msg;
+            dashboardError.classList.remove("hidden");
+            setTimeout(() => dashboardError.classList.add("hidden"), 4000);
+        }
+
+        if (getToken()) {
+            showDashboard();
+        }
+
+        loginForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const entered = document.getElementById("admin-password").value;
+            try {
+                const res = await fetch("/api/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ password: entered })
+                });
+                if (!res.ok) throw new Error("bad password");
+                const data = await res.json();
+                sessionStorage.setItem(TOKEN_KEY, data.token);
+                loginError.classList.add("hidden");
+                loginForm.reset();
+                showDashboard();
+            } catch (err) {
+                loginError.classList.remove("hidden");
+            }
+        });
+
+        logoutLink.addEventListener("click", function (e) {
+            e.preventDefault();
+            sessionStorage.removeItem(TOKEN_KEY);
+            showLogin();
+        });
+
+        function authHeaders() {
+            return {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + getToken()
+            };
+        }
+
+        async function handleAuthFailure(res) {
+            if (res.status === 401) {
+                sessionStorage.removeItem(TOKEN_KEY);
+                showLogin();
+                return true;
+            }
+            return false;
+        }
+
+        /* ---------- Vehicle management ---------- */
+        async function renderAdminVehicles() {
+            const listEl = document.getElementById("admin-vehicle-list");
+            const vehicles = await fetchVehicles();
+            if (vehicles.length === 0) {
+                listEl.innerHTML = `<li class="admin-empty">No vehicles listed.</li>`;
+                return;
+            }
+            listEl.innerHTML = vehicles.map(v => `
+                <li class="admin-row">
+                    <span class="admin-row-main">
+                        <strong>${escapeHtml(v.name)}</strong>
+                        <span class="admin-row-sub">${escapeHtml(String(v.year))} &middot; ${escapeHtml(v.mileage)} &middot; ${escapeHtml(v.fuel)} &middot; ${escapeHtml(v.transmission)} &middot; ${formatPrice(v.price)}</span>
+                    </span>
+                    <button type="button" class="btn-remove" data-id="${v.id}" data-type="vehicle">Remove</button>
+                </li>
+            `).join("");
+        }
+
+        async function renderAdminParts() {
+            const listEl = document.getElementById("admin-part-list");
+            const parts = await fetchParts();
+            if (parts.length === 0) {
+                listEl.innerHTML = `<li class="admin-empty">No parts in stock.</li>`;
+                return;
+            }
+            listEl.innerHTML = parts.map(p => `
+                <li class="admin-row">
+                    <span class="admin-row-main">
+                        <strong>${escapeHtml(p.name)}</strong>
+                        <span class="admin-row-sub">Fits ${escapeHtml(p.fits)} &middot; SKU ${escapeHtml(p.sku)} &middot; ${formatPrice(p.price)}</span>
+                    </span>
+                    <button type="button" class="btn-remove" data-id="${p.id}" data-type="part">Remove</button>
+                </li>
+            `).join("");
+        }
+
+        document.getElementById("vehicle-form").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const body = {
+                name: document.getElementById("v-name").value.trim(),
+                year: Number(document.getElementById("v-year").value),
+                mileage: document.getElementById("v-mileage").value.trim(),
+                fuel: document.getElementById("v-fuel").value.trim(),
+                transmission: document.getElementById("v-transmission").value.trim(),
+                price: Number(document.getElementById("v-price").value)
+            };
+            const res = await fetch("/api/vehicles", { method: "POST", headers: authHeaders(), body: JSON.stringify(body) });
+            if (await handleAuthFailure(res)) return;
+            if (!res.ok) { showDashboardError("Could not add vehicle."); return; }
+            this.reset();
+            renderAdminVehicles();
+            renderVehiclesOnSite();
+        });
+
+        document.getElementById("part-form").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const body = {
+                name: document.getElementById("p-name").value.trim(),
+                fits: document.getElementById("p-fits").value.trim(),
+                sku: document.getElementById("p-sku").value.trim(),
+                price: Number(document.getElementById("p-price").value)
+            };
+            const res = await fetch("/api/parts", { method: "POST", headers: authHeaders(), body: JSON.stringify(body) });
+            if (await handleAuthFailure(res)) return;
+            if (!res.ok) { showDashboardError("Could not add part."); return; }
+            this.reset();
+            renderAdminParts();
+            renderPartsOnSite();
+        });
+
+        document.addEventListener("click", async function (e) {
+            if (!e.target.classList.contains("btn-remove")) return;
+            const id = e.target.getAttribute("data-id");
+            const type = e.target.getAttribute("data-type");
+            const endpoint = type === "vehicle" ? `/api/vehicles/${id}` : `/api/parts/${id}`;
+            const res = await fetch(endpoint, { method: "DELETE", headers: authHeaders() });
+            if (await handleAuthFailure(res)) return;
+            if (!res.ok) { showDashboardError("Could not remove item."); return; }
+            if (type === "vehicle") { renderAdminVehicles(); renderVehiclesOnSite(); }
+            else { renderAdminParts(); renderPartsOnSite(); }
+        });
+    </script>
+
+</body>
+</html>

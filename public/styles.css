@@ -1,0 +1,583 @@
+/* =============================================
+   Automotive & Transport Solutions
+   Cars & Spare Parts — theme tokens
+   ============================================= */
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+    --asphalt: #15171B;
+    --steel: #2C313A;
+    --paper: #ECE9E3;
+    --chrome: #C9CDD3;
+    --safety-orange: #E4531B;
+    --plate-blue: #1247A6;
+
+    --font-display: 'Oswald', Impact, sans-serif;
+    --font-body: 'Inter', Arial, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    line-height: 1.6;
+    background-color: var(--paper);
+    color: var(--asphalt);
+}
+
+h1, h2, h3 {
+    font-family: var(--font-display);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--asphalt);
+}
+
+.container {
+    width: 86%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--safety-orange);
+    margin-bottom: 6px;
+}
+
+.section-lead {
+    max-width: 700px;
+    font-size: 1.05em;
+    margin-top: 6px;
+    margin-bottom: 24px;
+    color: #4a4e55;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    padding: 12px 22px;
+    border-radius: 3px;
+    border: 2px solid transparent;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.btn-primary {
+    background-color: var(--safety-orange);
+    color: #fff;
+    border-color: var(--safety-orange);
+}
+
+.btn-primary:hover { background-color: #c94413; transform: translateY(-1px); }
+
+.btn-outline {
+    background-color: transparent;
+    color: var(--asphalt);
+    border-color: var(--asphalt);
+}
+
+.btn-outline:hover { background-color: var(--asphalt); color: #fff; }
+
+.btn-sm { padding: 8px 16px; font-size: 0.8em; margin-top: 14px; }
+
+/* Header */
+header {
+    background-color: var(--asphalt);
+    color: #fff;
+    padding: 14px 0;
+    border-bottom: 3px solid var(--safety-orange);
+}
+
+.header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand-mark {
+    font-family: var(--font-display);
+    background-color: var(--safety-orange);
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 3px;
+    font-size: 1.1em;
+    letter-spacing: 0.05em;
+}
+
+.brand-name {
+    font-family: var(--font-display);
+    font-size: 1.2em;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+    gap: 22px;
+}
+
+header nav ul li a {
+    color: var(--chrome);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+header nav ul li a:hover { color: #fff; }
+
+/* Home / Hero Section */
+.hero {
+    background-color: var(--asphalt);
+    color: #fff;
+    padding: 60px 0;
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 40px;
+    align-items: center;
+}
+
+.hero h1 {
+    color: #fff;
+    font-size: 2.6em;
+    line-height: 1.15;
+    margin-bottom: 18px;
+}
+
+.hero-lead {
+    color: var(--chrome);
+    font-size: 1.05em;
+    max-width: 480px;
+    margin-bottom: 26px;
+}
+
+.hero .btn-outline {
+    color: #fff;
+    border-color: var(--chrome);
+}
+
+.hero .btn-outline:hover { background-color: #fff; color: var(--asphalt); border-color: #fff; }
+
+.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 34px; }
+
+.hero-stats {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--steel);
+    padding-top: 20px;
+}
+
+.stat { display: flex; flex-direction: column; }
+
+.stat-num {
+    font-family: var(--font-display);
+    font-size: 1.5em;
+    color: var(--safety-orange);
+}
+
+.stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.75em;
+    color: var(--chrome);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.hero-art { display: flex; justify-content: center; }
+.car-svg { width: 100%; max-width: 420px; }
+
+/* About Section */
+#about {
+    background-color: var(--paper);
+    padding: 50px 0;
+}
+
+#about h2 { font-size: 2em; margin-bottom: 18px; }
+
+#about p { font-size: 1.05em; max-width: 780px; }
+
+/* Vehicles Section */
+#vehicles {
+    background-color: #fff;
+    padding: 50px 0;
+}
+
+#vehicles h2 { font-size: 2em; margin-bottom: 24px; }
+
+.vehicle-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 22px;
+}
+
+.vehicle-card {
+    background-color: var(--paper);
+    border: 1px solid var(--chrome);
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.vehicle-media {
+    background-color: var(--steel);
+    padding: 18px;
+}
+
+.vehicle-media svg { width: 100%; height: auto; }
+
+.vehicle-body { padding: 18px; }
+
+.vehicle-body h3 {
+    font-size: 1.2em;
+    margin-bottom: 8px;
+}
+
+.spec-row {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 0.78em;
+    color: #55595f;
+    margin-bottom: 14px;
+}
+
+.spec-row li {
+    background-color: #fff;
+    border: 1px solid var(--chrome);
+    border-radius: 3px;
+    padding: 2px 8px;
+}
+
+/* Signature element: Kenyan-plate style price tag */
+.plate-tag {
+    display: inline-flex;
+    align-items: stretch;
+    background-color: #fff;
+    border: 2px solid var(--asphalt);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+
+.plate-strip {
+    background-color: var(--plate-blue);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 0.7em;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    letter-spacing: 0.05em;
+}
+
+.plate-value {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    padding: 6px 10px;
+    letter-spacing: 0.03em;
+}
+
+/* Spare Parts Section */
+.spares {
+    background-color: var(--steel);
+    color: #fff;
+    padding: 50px 0;
+}
+
+.spares h2 { color: #fff; font-size: 2em; }
+
+.spares .section-lead { color: var(--chrome); }
+
+.parts-list {
+    list-style: none;
+    border-top: 1px solid #454b55;
+    margin-bottom: 28px;
+}
+
+.parts-row {
+    display: grid;
+    grid-template-columns: 1.4fr 1.4fr 1fr 0.8fr;
+    gap: 10px;
+    padding: 14px 4px;
+    border-bottom: 1px solid #454b55;
+    font-size: 0.95em;
+    align-items: center;
+}
+
+.parts-head {
+    font-family: var(--font-mono);
+    font-size: 0.75em;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--chrome);
+}
+
+.sku {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    color: var(--chrome);
+}
+
+.price {
+    font-family: var(--font-mono);
+    color: var(--safety-orange);
+    font-weight: 500;
+}
+
+/* Contact Section */
+#contact {
+    padding: 50px 0;
+    background-color: #fff;
+}
+
+#contact h2 { font-size: 2em; margin-bottom: 10px; }
+
+form {
+    max-width: 600px;
+    text-align: left;
+}
+
+form label {
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #55595f;
+    display: block;
+    margin-top: 14px;
+}
+
+form input,
+form textarea,
+form button {
+    width: 100%;
+    padding: 10px;
+    margin: 6px 0;
+    border: 1px solid var(--chrome);
+    border-radius: 4px;
+    font-family: var(--font-body);
+}
+
+form textarea { min-height: 100px; }
+
+form button {
+    margin-top: 16px;
+    background-color: var(--safety-orange);
+    color: white;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    border: none;
+}
+
+form button:hover { background-color: #c94413; }
+
+/* Footer */
+footer {
+    background-color: var(--asphalt);
+    color: var(--chrome);
+    text-align: center;
+    padding: 20px 0;
+    border-top: 3px solid var(--safety-orange);
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+}
+
+.footer-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    text-align: left;
+}
+
+.admin-link {
+    color: var(--chrome);
+    text-decoration: none;
+    font-size: 0.9em;
+    border: 1px solid #454b55;
+    border-radius: 3px;
+    padding: 6px 12px;
+}
+
+.admin-link:hover { color: #fff; border-color: var(--safety-orange); }
+
+.empty-msg {
+    color: #6a6f76;
+    font-family: var(--font-mono);
+    font-size: 0.95em;
+}
+
+/* ===================== Admin Panel ===================== */
+.hidden { display: none !important; }
+
+.admin-section {
+    padding: 50px 0;
+}
+
+.login-box {
+    max-width: 420px;
+}
+
+.login-box h2 { font-size: 1.8em; margin-bottom: 10px; }
+
+#login-form label,
+.admin-form label {
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #55595f;
+    display: block;
+    margin-top: 12px;
+}
+
+#login-form input,
+.admin-form input {
+    width: 100%;
+    padding: 10px;
+    margin: 6px 0;
+    border: 1px solid var(--chrome);
+    border-radius: 4px;
+    font-family: var(--font-body);
+}
+
+#login-form button {
+    margin-top: 16px;
+    background-color: var(--safety-orange);
+    color: #fff;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    width: 100%;
+}
+
+#login-form button:hover { background-color: #c94413; }
+
+.form-error {
+    color: #c0392b;
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    margin-top: 10px;
+}
+
+.admin-panel {
+    background-color: #fff;
+    border: 1px solid var(--chrome);
+    border-radius: 6px;
+    padding: 24px;
+    margin-bottom: 26px;
+}
+
+.admin-panel h3 {
+    font-size: 1.3em;
+    margin-bottom: 16px;
+}
+
+.admin-form { margin-bottom: 20px; }
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+}
+
+.admin-form .btn { margin-top: 14px; border: none; cursor: pointer; }
+
+.admin-list {
+    list-style: none;
+    border-top: 1px solid var(--chrome);
+}
+
+.admin-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 4px;
+    border-bottom: 1px solid var(--chrome);
+}
+
+.admin-row-main {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.admin-row-sub {
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+    color: #6a6f76;
+}
+
+.admin-empty {
+    padding: 12px 4px;
+    color: #6a6f76;
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+}
+
+.btn-remove {
+    background-color: transparent;
+    border: 1px solid #c0392b;
+    color: #c0392b;
+    font-family: var(--font-mono);
+    font-size: 0.75em;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 6px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.btn-remove:hover { background-color: #c0392b; color: #fff; }
+
+/* Responsive */
+@media (max-width: 800px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-art { order: -1; }
+    .parts-row { grid-template-columns: 1fr 1fr; row-gap: 4px; }
+}
+
+@media (max-width: 500px) {
+    .header-bar { flex-direction: column; align-items: flex-start; }
+    .hero h1 { font-size: 2em; }
+}
