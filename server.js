@@ -4,7 +4,6 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const multer = require("multer");
-const nodemailer = require("nodemailer");
 const { pool, init } = require("./db");
 
 const app = express();
@@ -183,18 +182,16 @@ app.delete("/api/parts/:id", requireAuth, async (req, res) => {
 });
 
 // ---------- Contact form -> email ----------
-let mailer = null;
-if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
-  mailer = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.GMAIL_USER,
-      pass: process.env.GMAIL_APP_PASSWORD
-    }
-  });
-} else {
+// Uses Resend's HTTPS API instead of SMTP. Many hosts (including Render's
+// free tier) block outbound SMTP ports, but regular HTTPS calls like this
+// always go through, since it's the same kind of traffic as loading a
+// webpage.
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const CONTACT_FROM_EMAIL = process.env.CONTACT_FROM_EMAIL || "onboarding@resend.dev";
+
+if (!RESEND_API_KEY) {
   console.warn(
-    "GMAIL_USER / GMAIL_APP_PASSWORD not set — the contact form will not be able to send emails until these are configured."
+    "RESEND_API_KEY not set — the contact form will not be able to send emails until this is configured."
   );
 }
 
@@ -203,22 +200,36 @@ app.post("/api/contact", async (req, res) => {
   if (!name || !email || !message) {
     return res.status(400).json({ error: "Please fill in your name, email, and message." });
   }
-  if (!mailer) {
+  if (!RESEND_API_KEY) {
     console.error("Contact form submitted but email is not configured:", { name, email, message });
     return res.status(500).json({ error: "Email is not configured on the server yet." });
   }
   try {
-    await mailer.sendMail({
-      from: `"ATS Website" <${process.env.GMAIL_USER}>`,
-      to: CONTACT_TO_EMAIL,
-      replyTo: email,
-      subject: `New enquiry from ${name} — ATS website`,
-      text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
-      html: `<p><strong>Name:</strong> ${escapeHtml(name)}</p>
-             <p><strong>Email:</strong> ${escapeHtml(email)}</p>
-             <p><strong>Message:</strong></p>
-             <p>${escapeHtml(message).replace(/\n/g, "<br>")}</p>`
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${RESEND_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        from: `ATS Website <${CONTACT_FROM_EMAIL}>`,
+        to: CONTACT_TO_EMAIL,
+        reply_to: email,
+        subject: `New enquiry from ${name} — ATS website`,
+        text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+        html: `<p><strong>Name:</strong> ${escapeHtml(name)}</p>
+               <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+               <p><strong>Message:</strong></p>
+               <p>${escapeHtml(message).replace(/\n/g, "<br>")}</p>`
+      })
     });
+
+    if (!response.ok) {
+      const errBody = await response.text();
+      console.error("Resend API error:", response.status, errBody);
+      return res.status(500).json({ error: "Could not send your message right now. Please try again shortly." });
+    }
+
     res.json({ ok: true });
   } catch (e) {
     console.error("Failed to send contact email:", e);

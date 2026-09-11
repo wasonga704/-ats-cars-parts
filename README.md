@@ -90,31 +90,41 @@ icon, so photos are optional, not required.
 ## Step 4 — Set up the contact form email
 
 The "Get In Touch" form on the site sends enquiries straight to your Gmail
-inbox. This needs a one-time setup on your Google account — Gmail requires
-a special "App Password" for this rather than your normal login password.
+inbox. We use **Resend** to deliver these, not Gmail's own SMTP — this is
+important: **Render's free tier blocks the ports Gmail SMTP needs**, so
+Gmail SMTP will never work here no matter how correctly it's configured.
+Resend sends over regular HTTPS instead, the same kind of connection as
+loading a webpage, so it isn't blocked.
 
-1. Go to **myaccount.google.com/security**.
-2. Make sure **2-Step Verification** is turned on (App Passwords only work
-   if it is — turn it on first if it isn't already).
-3. Go to **myaccount.google.com/apppasswords**.
-4. Under "App name," type something like `ATS Website` and click **Create**.
-5. Google shows you a 16-character password (like `abcd efgh ijkl mnop`).
-   Copy it — you won't be able to see it again after closing that screen.
-6. In your `.env` file (locally) or Render's environment variables (live),
+1. Go to **resend.com** and sign up for a free account — use the same
+   Gmail address you want enquiries delivered to
+   (`josephwasonga40@gmail.com`). No credit card needed.
+2. Once logged in, go to **resend.com/api-keys** and click **Create API Key**.
+   Give it any name (e.g. `ATS Website`) and leave permissions as default.
+3. Copy the key shown (starts with `re_`) — like the Gmail app password,
+   you won't be able to see it again after closing that screen.
+4. In your `.env` file (locally) or Render's environment variables (live),
    set:
-   - `GMAIL_USER` — your Gmail address, e.g. `josephwasonga40@gmail.com`
-   - `GMAIL_APP_PASSWORD` — the 16-character password from step 5 (you can
-     include or remove the spaces, both work)
-   - `CONTACT_TO_EMAIL` — the address you want enquiries delivered to
-     (defaults to `josephwasonga40@gmail.com` if you leave it blank)
-7. Restart the server (locally: stop and run `npm start` again; on Render:
+   - `RESEND_API_KEY` — the key from step 3
+   - `CONTACT_TO_EMAIL` — the address enquiries should land in
+     (defaults to `josephwasonga40@gmail.com` if left blank)
+   - `CONTACT_FROM_EMAIL` — leave this as `onboarding@resend.dev` for now
+5. Restart the server (locally: stop and run `npm start` again; on Render:
    it restarts automatically when you save new environment variables).
+
+**A limit worth knowing:** on the free plan, without your own verified
+domain, Resend only allows sending to the *same email address you signed up
+with*. Since that's `josephwasonga40@gmail.com` in both places, this works
+perfectly for a single-admin business site — every enquiry lands exactly
+where you want it. If you ever want enquiries to go to a different address,
+or send from your own domain (e.g. `enquiries@yourbusiness.com`), you'd
+verify a domain on Resend first — happy to help with that when you get there.
 
 **To test it:** open your site, fill in the contact form, and submit it.
 You should see a "message sent" confirmation on the page, and the email
-should land in the inbox of whichever address you set as `CONTACT_TO_EMAIL`
-within a few seconds. If it doesn't arrive, double check the App Password
-was copied correctly (no typos) and that 2-Step Verification is on.
+should land in your inbox within a few seconds. If it doesn't arrive within
+a minute or two, check Render's Logs tab for a line starting with
+"Resend API error" — it'll show exactly what Resend rejected and why.
 
 ## Changing the admin password later
 
