@@ -26,9 +26,11 @@ async function init() {
       fuel TEXT NOT NULL,
       transmission TEXT NOT NULL,
       price INTEGER NOT NULL,
+      image TEXT,
       created_at TIMESTAMPTZ DEFAULT now()
     );
   `);
+  await pool.query(`ALTER TABLE vehicles ADD COLUMN IF NOT EXISTS image TEXT;`);
 
   await pool.query(`
     CREATE TABLE IF NOT EXISTS parts (
@@ -37,9 +39,11 @@ async function init() {
       fits TEXT NOT NULL,
       sku TEXT NOT NULL,
       price INTEGER NOT NULL,
+      image TEXT,
       created_at TIMESTAMPTZ DEFAULT now()
     );
   `);
+  await pool.query(`ALTER TABLE parts ADD COLUMN IF NOT EXISTS image TEXT;`);
 
   const { rows: vRows } = await pool.query("SELECT COUNT(*)::int AS n FROM vehicles");
   if (vRows[0].n === 0) {

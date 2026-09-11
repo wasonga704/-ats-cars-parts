@@ -80,6 +80,10 @@
                             <label for="v-price">Price (KSh)</label>
                             <input type="number" id="v-price" placeholder="1200000" required min="0">
                         </div>
+                        <div class="full-width-field">
+                            <label for="v-image">Photo (optional, JPG/PNG/WEBP, max 2.5MB)</label>
+                            <input type="file" id="v-image" accept="image/jpeg,image/png,image/webp">
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-primary btn-sm">Add Vehicle</button>
                 </form>
@@ -109,6 +113,10 @@
                         <div>
                             <label for="p-price">Price (KSh)</label>
                             <input type="number" id="p-price" placeholder="3500" required min="0">
+                        </div>
+                        <div class="full-width-field">
+                            <label for="p-image">Photo (optional, JPG/PNG/WEBP, max 2.5MB)</label>
+                            <input type="file" id="p-image" accept="image/jpeg,image/png,image/webp">
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary btn-sm">Add Part</button>
@@ -217,6 +225,7 @@
             }
             listEl.innerHTML = vehicles.map(v => `
                 <li class="admin-row">
+                    ${v.image ? `<img src="${v.image}" alt="${escapeHtml(v.name)}" class="admin-thumb">` : `<span class="admin-thumb admin-thumb-empty"></span>`}
                     <span class="admin-row-main">
                         <strong>${escapeHtml(v.name)}</strong>
                         <span class="admin-row-sub">${escapeHtml(String(v.year))} &middot; ${escapeHtml(v.mileage)} &middot; ${escapeHtml(v.fuel)} &middot; ${escapeHtml(v.transmission)} &middot; ${formatPrice(v.price)}</span>
@@ -235,6 +244,7 @@
             }
             listEl.innerHTML = parts.map(p => `
                 <li class="admin-row">
+                    ${p.image ? `<img src="${p.image}" alt="${escapeHtml(p.name)}" class="admin-thumb">` : `<span class="admin-thumb admin-thumb-empty"></span>`}
                     <span class="admin-row-main">
                         <strong>${escapeHtml(p.name)}</strong>
                         <span class="admin-row-sub">Fits ${escapeHtml(p.fits)} &middot; SKU ${escapeHtml(p.sku)} &middot; ${formatPrice(p.price)}</span>
@@ -246,17 +256,27 @@
 
         document.getElementById("vehicle-form").addEventListener("submit", async function (e) {
             e.preventDefault();
-            const body = {
-                name: document.getElementById("v-name").value.trim(),
-                year: Number(document.getElementById("v-year").value),
-                mileage: document.getElementById("v-mileage").value.trim(),
-                fuel: document.getElementById("v-fuel").value.trim(),
-                transmission: document.getElementById("v-transmission").value.trim(),
-                price: Number(document.getElementById("v-price").value)
-            };
-            const res = await fetch("/api/vehicles", { method: "POST", headers: authHeaders(), body: JSON.stringify(body) });
+            const formData = new FormData();
+            formData.append("name", document.getElementById("v-name").value.trim());
+            formData.append("year", document.getElementById("v-year").value);
+            formData.append("mileage", document.getElementById("v-mileage").value.trim());
+            formData.append("fuel", document.getElementById("v-fuel").value.trim());
+            formData.append("transmission", document.getElementById("v-transmission").value.trim());
+            formData.append("price", document.getElementById("v-price").value);
+            const imageFile = document.getElementById("v-image").files[0];
+            if (imageFile) formData.append("image", imageFile);
+
+            const res = await fetch("/api/vehicles", {
+                method: "POST",
+                headers: { "Authorization": "Bearer " + getToken() },
+                body: formData
+            });
             if (await handleAuthFailure(res)) return;
-            if (!res.ok) { showDashboardError("Could not add vehicle."); return; }
+            if (!res.ok) {
+                const data = await res.json().catch(() => ({}));
+                showDashboardError(data.error || "Could not add vehicle.");
+                return;
+            }
             this.reset();
             renderAdminVehicles();
             renderVehiclesOnSite();
@@ -264,15 +284,25 @@
 
         document.getElementById("part-form").addEventListener("submit", async function (e) {
             e.preventDefault();
-            const body = {
-                name: document.getElementById("p-name").value.trim(),
-                fits: document.getElementById("p-fits").value.trim(),
-                sku: document.getElementById("p-sku").value.trim(),
-                price: Number(document.getElementById("p-price").value)
-            };
-            const res = await fetch("/api/parts", { method: "POST", headers: authHeaders(), body: JSON.stringify(body) });
+            const formData = new FormData();
+            formData.append("name", document.getElementById("p-name").value.trim());
+            formData.append("fits", document.getElementById("p-fits").value.trim());
+            formData.append("sku", document.getElementById("p-sku").value.trim());
+            formData.append("price", document.getElementById("p-price").value);
+            const imageFile = document.getElementById("p-image").files[0];
+            if (imageFile) formData.append("image", imageFile);
+
+            const res = await fetch("/api/parts", {
+                method: "POST",
+                headers: { "Authorization": "Bearer " + getToken() },
+                body: formData
+            });
             if (await handleAuthFailure(res)) return;
-            if (!res.ok) { showDashboardError("Could not add part."); return; }
+            if (!res.ok) {
+                const data = await res.json().catch(() => ({}));
+                showDashboardError(data.error || "Could not add part.");
+                return;
+            }
             this.reset();
             renderAdminParts();
             renderPartsOnSite();

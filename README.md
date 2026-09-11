@@ -78,6 +78,44 @@ visit. Your data is unaffected either way — it lives in Neon, not on Render.
 If that wake-up delay matters to you (e.g. you're expecting steady traffic),
 Render's cheapest paid instance type removes it.
 
+## About vehicle & spare part photos
+
+When adding a car or a part in the admin panel, there's now an optional
+photo field (JPG, PNG, or WEBP, up to 2.5MB). Photos are stored inside your
+Neon database along with the listing itself — not as separate files — so
+they survive server restarts and redeploys, unlike files saved to disk on
+Render's free tier. A listing without a photo just falls back to a simple
+icon, so photos are optional, not required.
+
+## Step 4 — Set up the contact form email
+
+The "Get In Touch" form on the site sends enquiries straight to your Gmail
+inbox. This needs a one-time setup on your Google account — Gmail requires
+a special "App Password" for this rather than your normal login password.
+
+1. Go to **myaccount.google.com/security**.
+2. Make sure **2-Step Verification** is turned on (App Passwords only work
+   if it is — turn it on first if it isn't already).
+3. Go to **myaccount.google.com/apppasswords**.
+4. Under "App name," type something like `ATS Website` and click **Create**.
+5. Google shows you a 16-character password (like `abcd efgh ijkl mnop`).
+   Copy it — you won't be able to see it again after closing that screen.
+6. In your `.env` file (locally) or Render's environment variables (live),
+   set:
+   - `GMAIL_USER` — your Gmail address, e.g. `josephwasonga40@gmail.com`
+   - `GMAIL_APP_PASSWORD` — the 16-character password from step 5 (you can
+     include or remove the spaces, both work)
+   - `CONTACT_TO_EMAIL` — the address you want enquiries delivered to
+     (defaults to `josephwasonga40@gmail.com` if you leave it blank)
+7. Restart the server (locally: stop and run `npm start` again; on Render:
+   it restarts automatically when you save new environment variables).
+
+**To test it:** open your site, fill in the contact form, and submit it.
+You should see a "message sent" confirmation on the page, and the email
+should land in the inbox of whichever address you set as `CONTACT_TO_EMAIL`
+within a few seconds. If it doesn't arrive, double check the App Password
+was copied correctly (no typos) and that 2-Step Verification is on.
+
 ## Changing the admin password later
 
 Update `ADMIN_PASSWORD` in Render's Environment settings (or your local

@@ -59,7 +59,7 @@ async function renderVehiclesOnSite() {
     }
     grid.innerHTML = vehicles.map(v => `
         <article class="vehicle-card">
-            <div class="vehicle-media" aria-hidden="true">${carSvgMarkup()}</div>
+            <div class="vehicle-media" aria-hidden="true">${v.image ? `<img src="${v.image}" alt="${escapeHtml(v.name)}">` : carSvgMarkup()}</div>
             <div class="vehicle-body">
                 <h3>${escapeHtml(v.name)}</h3>
                 <ul class="spec-row">
@@ -76,13 +76,14 @@ async function renderPartsOnSite() {
     const list = document.getElementById("parts-list");
     if (!list) return;
     const parts = await fetchParts();
-    const headerRow = `<li class="parts-row parts-head"><span>Part</span><span>Fits</span><span>SKU</span><span>Price</span></li>`;
+    const headerRow = `<li class="parts-row parts-head"><span class="parts-photo-col"></span><span>Part</span><span>Fits</span><span>SKU</span><span>Price</span></li>`;
     if (parts.length === 0) {
         list.innerHTML = headerRow + `<li class="parts-row"><span>No parts in stock right now.</span></li>`;
         return;
     }
     const rows = parts.map(p => `
         <li class="parts-row">
+            <span class="parts-photo-col">${p.image ? `<img src="${p.image}" alt="${escapeHtml(p.name)}" class="part-thumb">` : ""}</span>
             <span>${escapeHtml(p.name)}</span><span>${escapeHtml(p.fits)}</span><span class="sku">${escapeHtml(p.sku)}</span><span class="price">${formatPrice(p.price)}</span>
         </li>
     `).join("");
@@ -92,4 +93,47 @@ async function renderPartsOnSite() {
 document.addEventListener("DOMContentLoaded", function () {
     renderVehiclesOnSite();
     renderPartsOnSite();
+    wireContactForm();
 });
+
+function wireContactForm() {
+    const form = document.querySelector("#contact form");
+    if (!form) return;
+    const statusEl = document.createElement("p");
+    statusEl.className = "form-status hidden";
+    form.appendChild(statusEl);
+
+    form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        const submitBtn = form.querySelector("button[type='submit']");
+        const originalLabel = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Sending...";
+        statusEl.classList.add("hidden");
+
+        const payload = {
+            name: document.getElementById("name").value.trim(),
+            email: document.getElementById("email").value.trim(),
+            message: document.getElementById("message").value.trim()
+        };
+
+        try {
+            const res = await fetch("/api/contact", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(data.error || "Something went wrong.");
+            statusEl.textContent = "Thanks — your message has been sent. We'll get back to you soon.";
+            statusEl.className = "form-status form-success";
+            form.reset();
+        } catch (err) {
+            statusEl.textContent = err.message || "Could not send your message. Please try again.";
+            statusEl.className = "form-status form-error-msg";
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalLabel;
+        }
+    });
+}
